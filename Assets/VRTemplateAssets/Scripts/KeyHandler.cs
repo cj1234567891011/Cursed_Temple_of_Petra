@@ -2,15 +2,33 @@ using UnityEngine;
 
 public class KeyHandler : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
+    [SerializeField] 
+    private GameObject KeyCollectedUI;
+    public bool hasKey;
+    
     void Start()
     {
-        
+        hasKey = false;
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.E)) 
+        {
+            InteractWithKey();
         
+        }
+    }
+
+    void InteractWithKey()
+    {
+        if (!hasKey)
+        {
+            hasKey = true;
+            KeyCollectedUI.SetActive(true);
+            GameObject.Destroy(this.gameObject);
+        }
     }
 }
