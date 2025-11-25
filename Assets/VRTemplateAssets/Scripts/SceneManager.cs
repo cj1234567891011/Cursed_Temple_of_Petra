@@ -12,22 +12,12 @@ public class SceneManager : MonoBehaviour
     
     public CanvasGroup fullScreenBlackPanel;
 
+    public SceneManager sceneManager;
     
     void Start()
     {
-        StartCoroutine(IntroSequence());
+        StartCoroutine("IntroSequence()");
 
-        SceneManager.LoadNextSceneAsync("Escape1");
-    }
-
-    private void StartCoroutine(IEnumerable enumerable)
-    {
-        throw new NotImplementedException();
-    }
-
-    private static void LoadNextSceneAsync(string v)
-    {
-        throw new NotImplementedException();
     }
 
     IEnumerable IntroSequence()
@@ -39,13 +29,10 @@ public class SceneManager : MonoBehaviour
         yield return new WaitForSeconds(7f); 
         yield return StartCoroutine(Fade(introUIPanel, 1f)); 
 
-        SceneManager.LoadNext("Escape1");        
+        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Escape1");
     }
 
-    private static void LoadNext(string v)
-    {
-        throw new NotImplementedException();
-    }
+    
 
     IEnumerator Fade(CanvasGroup group, float targetAlpha)
     {
