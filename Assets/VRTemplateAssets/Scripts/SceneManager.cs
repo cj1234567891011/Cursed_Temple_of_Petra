@@ -1,54 +1,60 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System;
-
+using Unity.Android.Gradle.Manifest;
 
 public class SceneManager : MonoBehaviour
 {
-    [SerializeField]
-    private CanvasGroup introUIPanel;
-    
-    public CanvasGroup fullScreenBlackPanel;
+    [SerializeField] private CanvasGroup outroPanel;
+    [SerializeField] private float fadeDuration = 3f;
 
-    public SceneManager sceneManager;
-    
+    [SerializeField] private CanvasGroup mummyCanvas;
+
+    [SerializeField] private Button restartButton;
+
+
     void Start()
     {
-        StartCoroutine("IntroSequence()");
-
+      StartCoroutine(StartOutro(mummyCanvas, outroPanel));
+      mummyCanvas.enabled = false;
+   
     }
 
-    IEnumerable IntroSequence()
+    IEnumerator StartOutro(CanvasGroup mummy,CanvasGroup outro)
     {
-        
-        yield return StartCoroutine(Fade(fullScreenBlackPanel.GetComponent<CanvasGroup>(), 0f));
-    
-        yield return StartCoroutine(Fade(introUIPanel, 2f)); 
-        yield return new WaitForSeconds(7f); 
-        yield return StartCoroutine(Fade(introUIPanel, 1f)); 
+        yield return new WaitForSeconds(2); 
+        yield return StartCoroutine(Fade(outro, 3f)); 
+        mummyCanvas.enabled = true;
+        yield return new WaitForSeconds(3f);
+        mummyCanvas.enabled = true;
+        outroPanel.enabled = true;
 
-        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Escape1");
     }
 
     
-
     IEnumerator Fade(CanvasGroup group, float targetAlpha)
     {
         float startAlpha = group.alpha;
         float time = 0;
-        while (time < 2f)
+        while (time < fadeDuration)
         {
             time += Time.deltaTime;
-           
-           //review this line, might cause bugs
-            group.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / 2f);
-           
+            group.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / fadeDuration);
             yield return null; 
         }
         group.alpha = targetAlpha;
     }
 
-    
+    void OllisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name == "RestartButton")
+        {
+            RestartScene();
+        }
+        
+    }
+    void RestartScene()
+    {
+       UnityEngine.SceneManagement.SceneManager.LoadScene("IntroScene");
+    }
 }
