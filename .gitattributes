@@ -2,7 +2,7 @@
 * text=auto
 
 # Unity Smart Merge for YAML-based Unity assets
-*.unity  merge=unityyamlmerge
+# *.unity  merge=unityyamlmerge
 *.prefab merge=unityyamlmerge
 *.asset  merge=unityyamlmerge
 *.meta   merge=unityyamlmerge
