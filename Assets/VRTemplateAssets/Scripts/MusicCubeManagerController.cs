@@ -7,8 +7,8 @@ public class MusicCubeManagerController : MonoBehaviour
 {
     //List correctMelody = [note1];
     [SerializeField] 
-    private List<AudioClip> correctMelody;
-    public List<AudioClip> playedMelody;
+    private List<string> correctMelody; // = new List<AudioClip>("note2", "note3", "note1", "note 2", "note3");
+    public List<string> playedMelody;
 
     public Canvas rightSequence;
 
@@ -23,17 +23,21 @@ public class MusicCubeManagerController : MonoBehaviour
     public AudioSource music2;
     public AudioSource music3;
     public SceneManager sceneManager;
+
+    public CanvasGroup clue3Canvas;
+    private bool isCorrect = false;
+
     
     void Start()
     {
-        correctMelody = new List<AudioClip>();
-        playedMelody = new List<AudioClip>();
-        rightSequence.enabled = false;
-        wrongSequence.enabled = false;
+        correctMelody = new List<string>();
+        playedMelody = new List<string>();
+        rightSequence.gameObject.SetActive(false);
+        wrongSequence.gameObject.SetActive(false);
     }
 
 
-    public void AddNoteToMelody(AudioClip note)
+    public void AddNoteToMelody(string note)
     {
         while(playedMelody.Count < correctMelody.Count)
         {
@@ -47,7 +51,7 @@ public class MusicCubeManagerController : MonoBehaviour
     {
         if (playedMelody.Count == correctMelody.Count)
          {
-            bool isCorrect = true;
+            
             for (int i = 0; i < correctMelody.Count; i++)
             {
                 if (playedMelody[i] != correctMelody[i])
@@ -56,6 +60,7 @@ public class MusicCubeManagerController : MonoBehaviour
                     break;
                }
             }
+            isCorrect = true;
 
             if (isCorrect)
             {
@@ -75,12 +80,9 @@ public class MusicCubeManagerController : MonoBehaviour
     
     void NextScene()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("OutroScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Ending");
     }
 
 
-    internal void AddNoteToMelody(string note1)
-    {
-        throw new NotImplementedException();
-    }
+  
 }

@@ -1,10 +1,12 @@
+using System.Collections;
 using UnityEngine;
+
 
 public class KeyHandler : MonoBehaviour
 {
     
     [SerializeField] 
-    private GameObject KeyCollectedUI;
+    private CanvasGroup KeyCollectedUI;
     public bool hasKey;
     
     void Start()
@@ -13,12 +15,18 @@ public class KeyHandler : MonoBehaviour
     }
 
     
-    void Update()
+   
+
+    void OnCollisionEnter(Collision collision)
     {
-        if (Input.GetKeyDown(KeyCode.E)) 
+         if (collision.gameObject.name == "HandColliderLeft" || collision.gameObject.name == "HandColliderRight")
         {
-            InteractWithKey();
-        
+            if (!hasKey && this.gameObject.name == "Key")
+            {
+                InteractWithKey();
+            }
+
+            
         }
     }
 
@@ -27,8 +35,27 @@ public class KeyHandler : MonoBehaviour
         if (!hasKey)
         {
             hasKey = true;
-            KeyCollectedUI.SetActive(true);
-            GameObject.Destroy(this.gameObject);
+            StartCoroutine(HandleKeyCollectionSequence());
         }
+    }
+
+   private IEnumerator HandleKeyCollectionSequence()
+    {
+       
+        if (KeyCollectedUI != null)
+        {
+            KeyCollectedUI.gameObject.SetActive(true);
+            yield return new WaitForSeconds(3f); 
+            KeyCollectedUI.gameObject.SetActive(false);
+        }else
+       
+
+       
+
+        
+
+            GameObject.Destroy(this.gameObject);
+            
+    
     }
 }

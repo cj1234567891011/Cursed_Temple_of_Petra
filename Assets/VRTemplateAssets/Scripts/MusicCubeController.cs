@@ -4,9 +4,9 @@ using UnityEngine;
 public class NewMonoBehaviourScript : MonoBehaviour
 {
 
-    public string note1;
-    public string note2;
-    public string note3;
+    public AudioClip note1;
+    public AudioClip note2;
+    public AudioClip note3;
 
     private MusicCubeManagerController musicCubeManagerController;
 
@@ -22,13 +22,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     void Start()
     {
-        musicCubeSound1 = GetComponent<AudioSource>();
-        musicCubeSound2 = GetComponent<AudioSource>();
-        musicCubeSound3 = GetComponent<AudioSource>();
-
-        musicCubeSound1.clip = musicCubeNote1;
-        musicCubeSound2.clip = musicCubeNote2;
-        musicCubeSound3.clip = musicCubeNote3;
+       
     }
 
 
@@ -36,6 +30,13 @@ public class NewMonoBehaviourScript : MonoBehaviour
     {
         musicCubeManagerController = FindObjectOfType<MusicCubeManagerController>();
 
+        musicCubeSound1 = GetComponent<AudioSource>();
+        musicCubeSound2 = GetComponent<AudioSource>();
+        musicCubeSound3 = GetComponent<AudioSource>();
+
+        musicCubeSound1.clip = musicCubeNote1;
+        musicCubeSound2.clip = musicCubeNote2;
+        musicCubeSound3.clip = musicCubeNote3;
 
 
     }
