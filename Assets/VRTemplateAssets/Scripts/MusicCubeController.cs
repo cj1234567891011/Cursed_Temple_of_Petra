@@ -4,9 +4,9 @@ using UnityEngine;
 public class NewMonoBehaviourScript : MonoBehaviour
 {
 
-    public AudioClip note1;
-    public AudioClip note2;
-    public AudioClip note3;
+    public string note1;
+    public string note2;
+    public string note3;
 
     private MusicCubeManagerController musicCubeManagerController;
 
@@ -18,14 +18,9 @@ public class NewMonoBehaviourScript : MonoBehaviour
     public AudioClip musicCubeNote2; 
     public AudioClip musicCubeNote3;
 
-    private bool isNotePlayed = false;
+    public bool isNotePlayed = false;
 
-    void Start()
-    {
-       
-    }
-
-
+    [System.Obsolete]
     void Awake()
     {
         musicCubeManagerController = FindObjectOfType<MusicCubeManagerController>();

@@ -47,12 +47,11 @@ public class KeyHandler : MonoBehaviour
             KeyCollectedUI.gameObject.SetActive(true);
             yield return new WaitForSeconds(3f); 
             KeyCollectedUI.gameObject.SetActive(false);
-        }else
-       
-
-       
-
-        
+        }
+        else
+        {
+            Debug.LogWarning("KeyCollectedUI is not assigned in the inspector.");
+        }
 
             GameObject.Destroy(this.gameObject);
             

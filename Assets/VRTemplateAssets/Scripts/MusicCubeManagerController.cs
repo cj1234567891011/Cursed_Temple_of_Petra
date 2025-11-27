@@ -22,7 +22,7 @@ public class MusicCubeManagerController : MonoBehaviour
     public AudioSource music1;
     public AudioSource music2;
     public AudioSource music3;
-    public SceneManager sceneManager;
+    
 
     public CanvasGroup clue3Canvas;
     private bool isCorrect = false;
@@ -36,6 +36,10 @@ public class MusicCubeManagerController : MonoBehaviour
         wrongSequence.gameObject.SetActive(false);
     }
 
+    void NextScene()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Ending");
+    }
 
     public void AddNoteToMelody(string note)
     {
@@ -78,10 +82,7 @@ public class MusicCubeManagerController : MonoBehaviour
         }
     }
     
-    void NextScene()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Ending");
-    }
+    
 
 
   
