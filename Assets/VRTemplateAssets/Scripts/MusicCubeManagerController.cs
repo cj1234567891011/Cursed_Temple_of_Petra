@@ -22,6 +22,7 @@ public class MusicCubeManagerController : MonoBehaviour
     public AudioSource music1;
     public AudioSource music2;
     public AudioSource music3;
+    public SceneManager sceneManager;
     
     void Start()
     {
@@ -71,11 +72,12 @@ public class MusicCubeManagerController : MonoBehaviour
             NextScene();
         }
     }
-
+    
     void NextScene()
     {
-        SceneManager.LoadSceneAsync("Escape2");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("OutroScene");
     }
+
 
     internal void AddNoteToMelody(string note1)
     {
