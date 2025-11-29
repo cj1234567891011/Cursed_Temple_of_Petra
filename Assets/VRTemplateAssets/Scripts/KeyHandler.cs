@@ -1,60 +1,42 @@
 using System.Collections;
 using UnityEngine;
 
-
 public class KeyHandler : MonoBehaviour
 {
-    
-    [SerializeField] 
+    public static bool KeyCollected { get; private set; }
+
+    [SerializeField]
     private CanvasGroup KeyCollectedUI;
-    public bool hasKey;
-    
+
     void Start()
     {
-        hasKey = false;
+        if (KeyCollectedUI != null)
+            KeyCollectedUI.gameObject.SetActive(false);
     }
 
-    
-   
-
-    void OnCollisionEnter(Collision collision)
+    public void TryCollectKey()
     {
-         if (collision.gameObject.name == "HandColliderLeft" || collision.gameObject.name == "HandColliderRight")
-        {
-            if (!hasKey && this.gameObject.name == "Key")
-            {
-                InteractWithKey();
-            }
+        if (KeyCollected) return;
 
-            
-        }
+        KeyCollected = true;
+        StartCoroutine(HandleKeyCollectionSequence());
     }
 
-    void InteractWithKey()
+    private IEnumerator HandleKeyCollectionSequence()
     {
-        if (!hasKey)
-        {
-            hasKey = true;
-            StartCoroutine(HandleKeyCollectionSequence());
-        }
-    }
-
-   private IEnumerator HandleKeyCollectionSequence()
-    {
-       
         if (KeyCollectedUI != null)
         {
             KeyCollectedUI.gameObject.SetActive(true);
-            yield return new WaitForSeconds(3f); 
+            yield return new WaitForSeconds(3f);
             KeyCollectedUI.gameObject.SetActive(false);
+            Debug.Log("[KeyHandler] Key collected!");
+            Debug.Log(KeyCollected);
         }
         else
         {
             Debug.LogWarning("KeyCollectedUI is not assigned in the inspector.");
         }
 
-            GameObject.Destroy(this.gameObject);
-            
-    
+        Destroy(gameObject);
     }
 }

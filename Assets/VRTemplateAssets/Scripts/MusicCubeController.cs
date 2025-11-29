@@ -1,79 +1,50 @@
-using System.Threading.Tasks;
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class MusicCubeController : MonoBehaviour
 {
+    public string note;     
 
-    public string note1;
-    public string note2;
-    public string note3;
+    public AudioSource audioSource;  
+    public AudioClip noteClip;       
 
-    private MusicCubeManagerController musicCubeManagerController;
+    private MusicCubeManager manager;
 
-    public AudioSource musicCubeSound1;
-    public AudioSource musicCubeSound2; 
-    public AudioSource musicCubeSound3;
-
-    public AudioClip musicCubeNote1;
-    public AudioClip musicCubeNote2; 
-    public AudioClip musicCubeNote3;
-
-    public bool isNotePlayed = false;
-
-    [System.Obsolete]
     void Awake()
     {
-        musicCubeManagerController = FindObjectOfType<MusicCubeManagerController>();
+        manager = FindFirstObjectByType<MusicCubeManager>();
 
-        musicCubeSound1 = GetComponent<AudioSource>();
-        musicCubeSound2 = GetComponent<AudioSource>();
-        musicCubeSound3 = GetComponent<AudioSource>();
-
-        musicCubeSound1.clip = musicCubeNote1;
-        musicCubeSound2.clip = musicCubeNote2;
-        musicCubeSound3.clip = musicCubeNote3;
-
-
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
     }
 
-    void AddNoteToMelody(string note)
+    public void OnCubeSelected()
     {
-        musicCubeManagerController.AddNoteToMelody(note);
+        Debug.Log($"{gameObject.name} has been touched");
+
+        PlayNote();
+        SendNoteToManager();
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void PlayNote()
     {
-        if (collision.gameObject.name == "HandColliderLeft" || collision.gameObject.name == "HandColliderRight")
+        if (audioSource == null || noteClip == null)
         {
-            if (this.gameObject.name == "MusicCube1")
-            {
-                musicCubeSound1.Play();
-                musicCubeManagerController.AddNoteToMelody(note1);
-                isNotePlayed = true;
-            }
-            else if (this.gameObject.name == "MusicCube2")
-            {
-                musicCubeSound2.Play();
-                musicCubeManagerController.AddNoteToMelody(note2);
-                isNotePlayed = true;
-            }
-            else if (this.gameObject.name == "MusicCube3")
-            {
-                musicCubeSound3.Play();
-                musicCubeManagerController.AddNoteToMelody(note3);
-                isNotePlayed = true;
-            }
-
-            Invoke(nameof(ResetReadyState), 0.2f);
+            Debug.LogWarning($"{gameObject.name} is missing AudioSource or noteClip");
+            return;
         }
+
+        audioSource.clip = noteClip;
+        audioSource.Play();
     }
 
-    //Check later if this works
-    async Task ResetReadyState()
+    private void SendNoteToManager()
     {
-        isNotePlayed = false;
-        await Task.CompletedTask;
-        isNotePlayed = true;
+        if (manager == null)
+        {
+            Debug.LogWarning($"{gameObject.name} cannot find MusicCubeManager");
+            return;
+        }
 
+        manager.AddNoteToMelody(note);
     }
 }

@@ -1,37 +1,31 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using Unity.Android.Gradle.Manifest;
 
-public class SceneManager : MonoBehaviour
+
+public class OutroSceneManager : MonoBehaviour
 {
     [SerializeField] private CanvasGroup outroPanel;
     [SerializeField] private float fadeDuration = 3f;
-
     [SerializeField] private CanvasGroup mummyCanvas;
-
     [SerializeField] private Button restartButton;
-
 
     void Start()
     {
-      StartCoroutine(StartOutro(mummyCanvas, outroPanel));
-      mummyCanvas.enabled = false;
-   
+        StartCoroutine(StartOutro(mummyCanvas, outroPanel));
+        mummyCanvas.enabled = false;
     }
 
-    IEnumerator StartOutro(CanvasGroup mummy,CanvasGroup outro)
+    IEnumerator StartOutro(CanvasGroup mummy, CanvasGroup outro)
     {
-        yield return new WaitForSeconds(2); 
-        yield return StartCoroutine(Fade(outro, 3f)); 
+        yield return new WaitForSeconds(2);
+        yield return StartCoroutine(Fade(outro, 3f));
         mummyCanvas.enabled = true;
         yield return new WaitForSeconds(3f);
         mummyCanvas.enabled = true;
         outroPanel.enabled = true;
-
     }
 
-    
     IEnumerator Fade(CanvasGroup group, float targetAlpha)
     {
         float startAlpha = group.alpha;
@@ -40,21 +34,21 @@ public class SceneManager : MonoBehaviour
         {
             time += Time.deltaTime;
             group.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / fadeDuration);
-            yield return null; 
+            yield return null;
         }
         group.alpha = targetAlpha;
     }
 
-    void OllisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name == "RestartButton")
         {
             RestartScene();
         }
-        
     }
+
     void RestartScene()
     {
-       UnityEngine.SceneManagement.SceneManager.LoadScene("IntroScene");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("IntroScene");
     }
 }

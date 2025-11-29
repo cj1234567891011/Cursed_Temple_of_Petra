@@ -1,50 +1,95 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Video;
 
-public class MusicBoxHandler1 : MonoBehaviour
+public class MusicBoxHandler : MonoBehaviour
 {
     [SerializeField]
     private GameObject musicBoxOpenedUI;
-   
-   [SerializeField]
+
+    [SerializeField]
     private GameObject musicBoxLockedUI;
 
     [SerializeField]
     private GameObject musicBoxvideo;
 
-
     public KeyHandler hasKey;
 
-   
     void Start()
     {
-        musicBoxOpenedUI.SetActive(false);
-        musicBoxLockedUI.SetActive(false);
-        StartCoroutine("OpenMusicBox");
-    }
-    void Update()
-    {
-       OpenMusicBox();
-    }
-
-
-    IEnumerable OpenMusicBox()
-    {
-       if (hasKey == true)
-        {
-            musicBoxOpenedUI.SetActive(true);
-            yield return new WaitForSeconds(5);
+        if (musicBoxOpenedUI != null)
             musicBoxOpenedUI.SetActive(false);
-            musicBoxvideo.GetComponent<AudioSource>().Play();
-            
-        } else if (hasKey == null)
-        {
-            musicBoxLockedUI.SetActive(true);
-            yield return new WaitForSeconds(5);
+        if (musicBoxLockedUI != null)
             musicBoxLockedUI.SetActive(false);
+
+        if (musicBoxvideo != null)
+        {
+            var audio = musicBoxvideo.GetComponent<AudioSource>();
+            if (audio != null) audio.Stop();
+
+            var video = musicBoxvideo.GetComponent<VideoPlayer>();
+            if (video != null)
+            {
+                video.Stop();
+                video.playOnAwake = false;
+            }
         }
     }
 
-    
+    public void TryOpenMusicBox()
+    {
+        Debug.Log("[MusicBoxHandler1] TryOpenMusicBox called");
 
+        StopAllCoroutines();
+        StartCoroutine(OpenMusicBox());
+    }
+
+    private IEnumerator OpenMusicBox()
+    {
+        Debug.Log("[MusicBoxHandler1] OpenMusicBox: KeyCollected = " + KeyHandler.KeyCollected);
+
+        if (KeyHandler.KeyCollected)
+        {
+            Debug.Log("[MusicBoxHandler1] Player HAS the key, opening box");
+
+            if (musicBoxOpenedUI != null)
+            {
+                musicBoxOpenedUI.SetActive(true);
+                yield return new WaitForSeconds(5f);
+                musicBoxOpenedUI.SetActive(false);
+            }
+
+            if (musicBoxvideo != null)
+            {
+                var audio = musicBoxvideo.GetComponent<AudioSource>();
+                if (audio != null)
+                {
+                    Debug.Log("[MusicBoxHandler1] Playing AudioSource on musicBoxvideo");
+                    audio.Play();
+                }
+
+                var video = musicBoxvideo.GetComponent<VideoPlayer>();
+                if (video != null)
+                {
+                    Debug.Log("[MusicBoxHandler1] Playing VideoPlayer on musicBoxvideo");
+                    video.Play();
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[MusicBoxHandler1] musicBoxvideo is not assigned");
+            }
+        }
+        else
+        {
+            Debug.Log("[MusicBoxHandler1] Player does NOT have the key, showing locked UI");
+
+            if (musicBoxLockedUI != null)
+            {
+                musicBoxLockedUI.SetActive(true);
+                yield return new WaitForSeconds(5f);
+                musicBoxLockedUI.SetActive(false);
+            }
+        }
+    }
 }

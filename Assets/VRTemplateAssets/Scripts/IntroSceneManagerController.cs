@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using Unity.Android.Gradle.Manifest;
+using UnityEngine.SceneManagement;
 
 public class IntroSceneManagerController : MonoBehaviour
 {
@@ -10,12 +10,10 @@ public class IntroSceneManagerController : MonoBehaviour
 
     public Image fadeImage;
 
-
     void Start()
     {
-      StartCoroutine(StartIntro(introPanel));
-      introPanel.enabled = false;
-   
+        StartCoroutine(StartIntro(introPanel));
+        introPanel.enabled = false;
     }
 
     IEnumerator StartIntro(CanvasGroup introPanel)
@@ -24,27 +22,27 @@ public class IntroSceneManagerController : MonoBehaviour
         startColor.a = 1f;
         fadeImage.color = startColor;
 
-        yield return new WaitForSeconds(2); 
-        yield return StartCoroutine(Fade(introPanel, 3f)); 
-        
+        yield return new WaitForSeconds(2);
+        yield return StartCoroutine(Fade(introPanel, 3f));
+
         introPanel.enabled = true;
         yield return new WaitForSeconds(8f);
-        UnityEditor.SceneManagement.EditorSceneManager.LoadScene("Escape1");
+
+        SceneManager.LoadScene("Escape1");
     }
 
-    
     IEnumerator Fade(CanvasGroup group, float targetAlpha)
     {
         float startAlpha = group.alpha;
         float time = 0;
+
         while (time < fadeDuration)
         {
             time += Time.deltaTime;
             group.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / fadeDuration);
-            yield return null; 
+            yield return null;
         }
+
         group.alpha = targetAlpha;
     }
-
 }
-
