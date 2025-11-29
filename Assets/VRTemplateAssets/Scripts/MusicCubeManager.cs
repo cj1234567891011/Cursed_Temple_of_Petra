@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,9 +13,11 @@ public class MusicCubeManager : MonoBehaviour
     public Canvas rightSequence;
     public Canvas wrongSequence;
 
+    [SerializeField] private float wrongSequenceDisplayTime = 2f; 
+
     void Start()
     {
-        correctMelody = new List<string> { "A", "B", "C" };
+        correctMelody = new List<string> { "B", "C", "A", "B", "C"}; 
 
         playedMelody = new List<string>();
         rightSequence.gameObject.SetActive(false);
@@ -51,10 +54,19 @@ public class MusicCubeManager : MonoBehaviour
         }
         else
         {
-            wrongSequence.gameObject.SetActive(true);
             rightSequence.gameObject.SetActive(false);
+            wrongSequence.gameObject.SetActive(true);
             playedMelody.Clear();
+
+            StopCoroutine(nameof(HideWrongSequence));
+            StartCoroutine(HideWrongSequence());
         }
+    }
+
+    private IEnumerator HideWrongSequence()
+    {
+        yield return new WaitForSeconds(wrongSequenceDisplayTime);
+        wrongSequence.gameObject.SetActive(false);
     }
 
     void NextScene()

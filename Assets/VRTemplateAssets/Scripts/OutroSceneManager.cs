@@ -1,54 +1,60 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
-using UnityEngine.UI;
-
 
 public class OutroSceneManager : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup outroPanel;
-    [SerializeField] private float fadeDuration = 3f;
-    [SerializeField] private CanvasGroup mummyCanvas;
-    [SerializeField] private Button restartButton;
+    public CanvasGroup professorPanel;
+    public CanvasGroup mummyPanel;
+    public CanvasGroup outroPanel;
+
+    public AudioSource footstepsAudio;
+    public AudioSource jumpscareAudio;
+
+    public float professorTextDuration = 2f;
+    public float mummyFadeTime = 0.2f;
+    public float outroDelay = 2f;
 
     void Start()
     {
-        StartCoroutine(StartOutro(mummyCanvas, outroPanel));
-        mummyCanvas.enabled = false;
+        professorPanel.alpha = 1;
+        mummyPanel.alpha = 0;
+        outroPanel.alpha = 0;
+
+        StartCoroutine(PlaySequence());
     }
 
-    IEnumerator StartOutro(CanvasGroup mummy, CanvasGroup outro)
+    IEnumerator PlaySequence()
     {
-        yield return new WaitForSeconds(2);
-        yield return StartCoroutine(Fade(outro, 3f));
-        mummyCanvas.enabled = true;
-        yield return new WaitForSeconds(3f);
-        mummyCanvas.enabled = true;
-        outroPanel.enabled = true;
-    }
+        yield return new WaitForSeconds(professorTextDuration);
 
-    IEnumerator Fade(CanvasGroup group, float targetAlpha)
-    {
-        float startAlpha = group.alpha;
-        float time = 0;
-        while (time < fadeDuration)
+        footstepsAudio.Play();
+
+        yield return new WaitForSeconds(footstepsAudio.clip.length);
+
+        jumpscareAudio.Play();
+
+        float t = 0f;
+        while (t < mummyFadeTime)
         {
-            time += Time.deltaTime;
-            group.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / fadeDuration);
+            t += Time.deltaTime;
+            mummyPanel.alpha = Mathf.Lerp(0, 1, t / mummyFadeTime);
             yield return null;
         }
-        group.alpha = targetAlpha;
-    }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.name == "RestartButton")
+        yield return new WaitForSeconds(outroDelay);
+
+        t = 0;
+        while (t < 1f)
         {
-            RestartScene();
+            t += Time.deltaTime;
+            outroPanel.alpha = Mathf.Lerp(0, 1, t);
+            yield return null;
         }
     }
 
-    void RestartScene()
+    public void RestartScene()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("IntroScene");
+        SceneManager.LoadScene("Intro");
     }
 }
